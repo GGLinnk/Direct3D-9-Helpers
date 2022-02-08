@@ -9,17 +9,29 @@ int d3dDisplayModeCmp(const void *firstD3dDisplayMode, const void *secondD3dDisp
     D3DDISPLAYMODE firstD3dDisplayModeT = * (const D3DDISPLAYMODE *)firstD3dDisplayMode;
     D3DDISPLAYMODE secondD3dDisplayModeT = * (const D3DDISPLAYMODE *)secondD3dDisplayMode;
 
-    UINT wDiff = (firstD3dDisplayModeT.Width - secondD3dDisplayModeT.Width);
+    INT64 wDiff = (INT64)firstD3dDisplayModeT.Width - (INT64)secondD3dDisplayModeT.Width;
 
     if (wDiff == 0) {
-        UINT hDiff = (firstD3dDisplayModeT.Height - secondD3dDisplayModeT.Height);
+        INT64 hDiff = (INT64)firstD3dDisplayModeT.Height - (INT64)secondD3dDisplayModeT.Height;
 
         if (hDiff == 0) {
-            return (firstD3dDisplayModeT.RefreshRate - secondD3dDisplayModeT.RefreshRate);
+            INT64 rDiff = (INT64)firstD3dDisplayModeT.RefreshRate - (INT64)secondD3dDisplayModeT.RefreshRate;
+
+            if (rDiff > 0)
+                return 4;
+            if (rDiff < 0)
+                return -4;
+            return 0;
         }
 
-        return hDiff;
+        if (hDiff > 0)
+            return 2;
+        if (hDiff < 0)
+            return -2;
     }
 
-    return wDiff;
+    if (wDiff > 0)
+        return 1;
+    if (wDiff < 0)
+        return -1;
 }
